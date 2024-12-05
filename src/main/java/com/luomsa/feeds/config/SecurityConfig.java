@@ -55,9 +55,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                .securityContext(context -> {
-                    context.securityContextRepository(contextRepository());
-                })
+                .securityContext(context -> context.securityContextRepository(contextRepository()))
                 .requestCache(AbstractHttpConfigurer::disable)
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> {
