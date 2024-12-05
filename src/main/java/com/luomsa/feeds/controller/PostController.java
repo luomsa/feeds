@@ -3,11 +3,8 @@ package com.luomsa.feeds.controller;
 import com.luomsa.feeds.dto.*;
 import com.luomsa.feeds.service.CommentService;
 import com.luomsa.feeds.service.PostService;
-import com.luomsa.feeds.service.UserService;
-import com.sun.net.httpserver.HttpContext;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
