@@ -1,5 +1,6 @@
 package com.luomsa.feeds.controller;
 
+import com.luomsa.feeds.dto.UserDto;
 import com.luomsa.feeds.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -19,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping("/me")
-    public ResponseEntity<?> me() {
+    public ResponseEntity<UserDto> me() {
         var user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(user.isEmpty()) {
             var problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);

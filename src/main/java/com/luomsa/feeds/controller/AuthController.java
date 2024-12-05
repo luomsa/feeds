@@ -1,6 +1,7 @@
 package com.luomsa.feeds.controller;
 
 import com.luomsa.feeds.dto.AuthRequestDto;
+import com.luomsa.feeds.dto.UserDto;
 import com.luomsa.feeds.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody AuthRequestDto request) {
+    public ResponseEntity<UserDto> login(@Valid @RequestBody AuthRequestDto request) {
         var user = userService.login(request.username(), request.password());
         if (user.isEmpty()) {
             var problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
@@ -30,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody AuthRequestDto request) {
+    public ResponseEntity<UserDto> register(@Valid @RequestBody AuthRequestDto request) {
         var user = userService.register(request.username(), request.password());
         if (user.isEmpty()) {
             var problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
