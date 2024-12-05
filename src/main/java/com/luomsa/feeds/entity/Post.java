@@ -14,8 +14,12 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
+    private String slug;
 
     @Column(nullable = false)
     private String content;
@@ -34,8 +38,9 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String content, User author) {
+    public Post(String title, String slug, String content, User author) {
         this.title = title;
+        this.slug = slug;
         this.content = content;
         this.author = author;
     }
@@ -54,6 +59,14 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public String getContent() {

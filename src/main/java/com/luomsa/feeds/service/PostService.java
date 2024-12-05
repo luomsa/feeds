@@ -1,5 +1,6 @@
 package com.luomsa.feeds.service;
 
+import com.luomsa.feeds.StringUtils;
 import com.luomsa.feeds.dto.PostDto;
 import com.luomsa.feeds.dto.PagePostDto;
 import com.luomsa.feeds.dto.UserDto;
@@ -25,16 +26,24 @@ public class PostService implements IPostService {
         if (user.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        var post = new Post(title, content, user.get());
+        var post = new Post(title.trim(), StringUtils.toSlug(title.trim()), content, user.get());
         postRepository.save(post);
-        return new PostDto(post.getId(), post.getTitle(), post.getContent(),
+        return new PostDto(post.getId(), post.getSlug(), post.getTitle(), post.getContent(),
                 new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt());
     }
 
-    public PagePostDto getPosts(int page) {
-        var posts = postRepository.findAllByOrderByCreatedAtDesc(PageRequest.of(page, 20));
+    public PagePostDto getCommentedPosts(int page) {
+        var posts = postRepository.findAllByOrderByComments(PageRequest.of(page, 5));
         return new PagePostDto(posts.getContent().stream().map(post ->
-                new PostDto(post.getId(), post.getTitle(), post.getContent(),
-                        new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt())).toList(), posts.hasNext());
+                new PostDto(post.getId(), post.getSlug(), post.getTitle(), post.getContent(),
+                        new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt())).toList(), posts.hasNext(), posts.getTotalPages());
     }
+
+    public PagePostDto getLatestPosts(int page) {
+        var posts = postRepository.findAllByOrderByCreatedAt(PageRequest.of(page, 5));
+        return new PagePostDto(posts.getContent().stream().map(post ->
+                new PostDto(post.getId(), post.getSlug(), post.getTitle(), post.getContent(),
+                        new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt())).toList(), posts.hasNext(), posts.getTotalPages());
+    }
+
 }

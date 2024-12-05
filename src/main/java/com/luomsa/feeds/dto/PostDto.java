@@ -8,6 +8,8 @@ public record PostDto(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         Long id,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        String slug,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String title,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String content,
@@ -15,6 +17,6 @@ public record PostDto(
         UserDto author,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int commentCount,
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED, type = "string")
         Instant createdAt) {
 }

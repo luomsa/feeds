@@ -11,6 +11,6 @@ public record CommentDto(
         String content,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         UserDto author,
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED, type = "string")
         Instant createdAt) {
 }
