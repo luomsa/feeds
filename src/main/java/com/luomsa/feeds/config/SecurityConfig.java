@@ -59,7 +59,7 @@ public class SecurityConfig {
                 .requestCache(AbstractHttpConfigurer::disable)
                 .exceptionHandling((exceptionHandling) -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.setHeader("Set-Cookie", "JSESSIONID=; Path=/; Max-Age=0; HttpOnly");
+                            response.setHeader("Set-Cookie", "JSESSIONID=; Path=/; Max-Age=0; SameSite=Strict; HttpOnly");
                             var problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
                             problem.setInstance(URI.create(request.getRequestURI()));
                             response.setStatus(problem.getStatus());

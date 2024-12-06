@@ -10,4 +10,5 @@ public class FeedsApplication {
         SpringApplication.run(FeedsApplication.class, args);
     }
 
+
 }

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByOrderByCreatedAt(Pageable pageable);
@@ -17,4 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             ORDER BY COUNT(c) DESC
             """)
     Page<Post> findAllByOrderByComments(Pageable pageable);
+
+    Optional<Post> findPostById(Long id);
 }

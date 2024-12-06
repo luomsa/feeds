@@ -22,7 +22,7 @@ public class UserController {
     @PostMapping("/me")
     public ResponseEntity<UserDto> me() {
         var user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             var problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
             problem.setTitle("Unauthorized");
             problem.setDetail("Unauthorized");
