@@ -8,9 +8,9 @@ public record PostDto(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         Long id,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        String slug,
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String title,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
+        String slug,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String content,
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
