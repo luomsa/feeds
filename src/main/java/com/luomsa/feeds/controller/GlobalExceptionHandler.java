@@ -9,20 +9,25 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
-    public String handleNotFoundException(NotFoundException e) {
-        return e.getMessage();
+    public  ResponseEntity<Object> handleNotFoundException(NotFoundException e) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Not Found");
+        problem.setDetail(e.getMessage());
+        return ResponseEntity.of(problem).build();
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public String handleUsernameNotFoundException(UsernameNotFoundException e) {
-        return e.getMessage();
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException e) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Not Found");
+        problem.setDetail(e.getMessage());
+        return ResponseEntity.of(problem).build();
     }
 
     @Override
@@ -30,7 +35,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Bad Request");
         problem.setDetail("Invalid request");
-        problem.setInstance(URI.create(request.getContextPath()));
         var errors = new HashMap<String, Object>();
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             errors.put(error.getField(), error.getDefaultMessage());
