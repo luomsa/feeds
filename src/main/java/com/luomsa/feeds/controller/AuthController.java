@@ -3,6 +3,7 @@ package com.luomsa.feeds.controller;
 import com.luomsa.feeds.dto.AuthRequestDto;
 import com.luomsa.feeds.dto.UserDto;
 import com.luomsa.feeds.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final UserService userService;
+    private final HttpServletRequest request;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, HttpServletRequest request) {
         this.userService = userService;
+        this.request = request;
     }
 
     @PostMapping("/login")
@@ -40,5 +43,11 @@ public class AuthController {
             return ResponseEntity.of(problem).build();
         }
         return ResponseEntity.ok(user.get());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        request.getSession().invalidate();
+        return ResponseEntity.ok().header("Set-Cookie", "JSESSIONID=; Path=/; Max-Age=0; SameSite=Strict; HttpOnly").build();
     }
 }
