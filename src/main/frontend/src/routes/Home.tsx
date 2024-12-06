@@ -1,7 +1,6 @@
 import { Box, Flex, Loader, Pagination, Text } from "@mantine/core";
 import SortOptions from "../components/SortOptions.tsx";
 import { useNavigate } from "react-router";
-import React, { useEffect, useState } from "react";
 import client from "../lib/api/client.ts";
 import { useMediaQuery } from "@mantine/hooks";
 import useQueryParams from "../hooks/useQueryParams.tsx";
@@ -50,6 +49,9 @@ const Home = () => {
         </Flex>
       )}
       <Flex justify={"center"}>{isPending && <Loader color="gray" />}</Flex>
+      <Flex justify={"center"}>
+        {error && <Text>Failed to load posts</Text>}
+      </Flex>
       {data && <Feed data={data} />}
       <Pagination
         total={data?.totalPages ?? 0}
