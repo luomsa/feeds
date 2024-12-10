@@ -143,12 +143,14 @@ export interface components {
         CommentRequestDto: {
             content?: string;
         };
-        CommentDto: {
+        CommentWithPageDto: {
             /** Format: int64 */
             id: number;
             content: string;
             author: components["schemas"]["UserDto"];
             createdAt: string;
+            /** Format: int32 */
+            page: number;
         };
         AuthRequestDto: {
             username?: string;
@@ -160,9 +162,18 @@ export interface components {
             /** Format: int32 */
             totalPages: number;
         };
+        CommentDto: {
+            /** Format: int64 */
+            id: number;
+            content: string;
+            author: components["schemas"]["UserDto"];
+            createdAt: string;
+        };
         PageCommentDto: {
             comments: components["schemas"]["CommentDto"][];
             hasMore: boolean;
+            /** Format: int32 */
+            totalPages: number;
         };
     };
     responses: never;
@@ -285,7 +296,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CommentDto"];
+                    "*/*": components["schemas"]["CommentWithPageDto"];
                 };
             };
         };

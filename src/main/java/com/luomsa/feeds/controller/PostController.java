@@ -42,10 +42,13 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/comments")
-    public ResponseEntity<CommentDto> createComment(@PathVariable long postId, @Valid @RequestBody CommentRequestDto request) {
+    public ResponseEntity<CommentWithPageDto> createComment(@PathVariable long postId, @Valid @RequestBody CommentRequestDto request) {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         var comment = commentService.createComment(username, postId, request.content());
-        return ResponseEntity.ok(comment);
+        var count = commentService.getCommentCount(postId);
+        var page = (count - 1) / 20;
+        var commentWithPage = new CommentWithPageDto(comment.id(), comment.content(), comment.author(), comment.createdAt(), page);
+        return ResponseEntity.ok(commentWithPage);
     }
 
     @GetMapping("/{postId}/comments")

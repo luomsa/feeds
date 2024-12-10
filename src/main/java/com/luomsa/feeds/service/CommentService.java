@@ -39,8 +39,12 @@ public class CommentService {
     }
 
     public PageCommentDto getComments(long postId, int page) {
-        var comments = commentRepository.getAllByIdOrderByCreatedAtDesc(postId, PageRequest.of(page, 20));
+        var comments = commentRepository.getAllByPostIdOrderByCreatedAt(postId, PageRequest.of(page, 20));
         return new PageCommentDto(comments.getContent().stream().map(comment -> new CommentDto(comment.getId(), comment.getContent(),
-                new UserDto(comment.getAuthor().getId(), comment.getAuthor().getUsername()), comment.getCreatedAt())).toList(), comments.hasNext());
+                new UserDto(comment.getAuthor().getId(), comment.getAuthor().getUsername()), comment.getCreatedAt())).toList(), comments.hasNext(), comments.getTotalPages());
+    }
+
+    public int getCommentCount(long postId) {
+        return commentRepository.countCommentsByPostId(postId);
     }
 }

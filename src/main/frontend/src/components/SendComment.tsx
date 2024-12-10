@@ -1,36 +1,45 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Flex,
-  Textarea,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Alert, Button, Flex, Textarea } from "@mantine/core";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import client from "../lib/api/client.ts";
+import { useState } from "react";
 import { ApiError } from "../lib/api/middleware.ts";
-import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import useQueryParams from "../hooks/useQueryParams.tsx";
 type Inputs = {
-  title: string;
   content: string;
 };
-const NewPost = () => {
+const SendComment = () => {
+  const params = useParams() as { id: string; slug: string };
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Inputs>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const queryParams = useQueryParams();
   const [apiError, setApiError] = useState<string | null>(null);
   const onSubmit: SubmitHandler<Inputs> = async (inputs) => {
     try {
-      const { data } = await client.POST("/api/posts", {
-        body: { title: inputs.title, content: inputs.content },
+      const { data } = await client.POST("/api/posts/{postId}/comments", {
+        params: {
+          path: {
+            postId: Number(params.id),
+          },
+        },
+        body: inputs,
       });
+
+      reset();
       if (data) {
-        navigate(`/post/${data.id}/${data.slug}`);
+        navigate(`/post/${params.id}/${params.slug}?page=${data.page}`);
+        if (data.page === queryParams.page) {
+          await queryClient.invalidateQueries({
+            queryKey: ["comments", params.id, queryParams.page],
+          });
+        }
       }
     } catch (ex) {
       if (ex instanceof ApiError) {
@@ -42,48 +51,32 @@ const NewPost = () => {
     }
   };
   return (
-    <Box>
-      <Title order={3}>New post</Title>
+    <Flex>
       <Flex
         component={"form"}
-        onSubmit={handleSubmit(onSubmit)}
         direction={"column"}
+        w={"100%"}
         gap={"md"}
+        onSubmit={handleSubmit(onSubmit)}
       >
         {apiError && (
           <Alert variant="light" color="red" title="Error">
             {apiError}
           </Alert>
         )}
-        <TextInput
-          label="Title"
-          error={errors.content?.message}
-          {...register("title", {
-            required: "Title is required",
-            minLength: {
-              value: 1,
-              message: "Title must be at least 1 characters long",
-            },
-            maxLength: {
-              value: 80,
-              message: "Title must be at most 80 characters long",
-            },
-          })}
-        />
         <Textarea
-          label="Content"
+          w={"100%"}
+          label="Comment"
           error={errors.content?.message}
-          autosize
-          minRows={4}
           {...register("content", {
             required: "Content is required",
             minLength: {
               value: 1,
-              message: "Password must be at least 1 characters long",
+              message: "Content must be at least 1 characters long",
             },
             maxLength: {
-              value: 400,
-              message: "Content must be at most 400 characters long",
+              value: 240,
+              message: "Content must be at most 80 characters long",
             },
           })}
         />
@@ -91,7 +84,7 @@ const NewPost = () => {
           Submit
         </Button>
       </Flex>
-    </Box>
+    </Flex>
   );
 };
-export default NewPost;
+export default SendComment;

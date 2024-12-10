@@ -31,7 +31,7 @@ public class PostService {
     }
 
     public PagePostDto getCommentedPosts(int page) {
-        var posts = postRepository.findAllByOrderByComments(PageRequest.of(page, 5));
+        var posts = postRepository.findAllByOrderByComments(PageRequest.of(page, 25));
         return new PagePostDto(posts.getContent().stream().map(post ->
                 new PostDto(post.getId(), post.getTitle(), post.getSlug(), post.getContent(),
                         new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt())).toList(), posts.hasNext(), posts.getTotalPages());
@@ -47,7 +47,7 @@ public class PostService {
     }
 
     public PagePostDto getLatestPosts(int page) {
-        var posts = postRepository.findAllByOrderByCreatedAt(PageRequest.of(page, 5));
+        var posts = postRepository.findAllByOrderByCreatedAt(PageRequest.of(page, 25));
         return new PagePostDto(posts.getContent().stream().map(post ->
                 new PostDto(post.getId(), post.getTitle(), post.getSlug(), post.getContent(),
                         new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt())).toList(),
