@@ -47,7 +47,7 @@ public class PostService {
     }
 
     public PagePostDto getLatestPosts(int page) {
-        var posts = postRepository.findAllByOrderByCreatedAt(PageRequest.of(page, 25));
+        var posts = postRepository.findAllByOrderByLatestCommentAtDesc(PageRequest.of(page, 25));
         return new PagePostDto(posts.getContent().stream().map(post ->
                 new PostDto(post.getId(), post.getTitle(), post.getSlug(), post.getContent(),
                         new UserDto(post.getAuthor().getId(), post.getAuthor().getUsername()), post.getComments().size(), post.getCreatedAt())).toList(),

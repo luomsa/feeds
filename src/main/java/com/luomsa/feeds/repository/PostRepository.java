@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Page<Post> findAllByOrderByCreatedAt(Pageable pageable);
+    Page<Post> findAllByOrderByLatestCommentAtDesc(Pageable pageable);
 
     @Query("""
             SELECT p FROM Post p LEFT JOIN p.comments c

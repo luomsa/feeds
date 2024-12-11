@@ -1,9 +1,10 @@
 import { Anchor, Button, Flex } from "@mantine/core";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth.tsx";
 
 const SortOptions = () => {
   const { state } = useAuth();
+  const navigate = useNavigate();
   return (
     <Flex gap={"md"} my={"sm"}>
       <Anchor style={{ color: "black" }} component={Link} to="?sort=latest">
@@ -12,7 +13,11 @@ const SortOptions = () => {
       <Anchor style={{ color: "black" }} component={Link} to="?sort=comments">
         Comments
       </Anchor>
-      {state.user && <Button ms={"auto"}>New post</Button>}
+      {state.user && (
+        <Button ms={"auto"} onClick={() => navigate("/new-post")}>
+          New post
+        </Button>
+      )}
     </Flex>
   );
 };

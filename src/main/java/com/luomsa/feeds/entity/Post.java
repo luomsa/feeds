@@ -28,6 +28,10 @@ public class Post {
     @Column(nullable = false)
     private Instant createdAt;
 
+    @CreationTimestamp
+    @Column(nullable = false)
+    private Instant latestCommentAt;
+
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
@@ -43,6 +47,14 @@ public class Post {
         this.slug = slug;
         this.content = content;
         this.author = author;
+    }
+
+    public Instant getLatestCommentAt() {
+        return latestCommentAt;
+    }
+
+    public void setLatestCommentAt(Instant latestCommentAt) {
+        this.latestCommentAt = latestCommentAt;
     }
 
     public Long getId() {

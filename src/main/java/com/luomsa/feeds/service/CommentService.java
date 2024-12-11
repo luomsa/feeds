@@ -8,8 +8,11 @@ import com.luomsa.feeds.exception.NotFoundException;
 import com.luomsa.feeds.repository.CommentRepository;
 import com.luomsa.feeds.repository.PostRepository;
 import com.luomsa.feeds.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 public class CommentService {
@@ -23,17 +26,21 @@ public class CommentService {
         this.postRepository = postRepository;
     }
 
+    @Transactional
     public CommentDto createComment(String username, Long postId, String content) {
         var user = userRepository.findByUsernameIgnoreCase(username);
         if (user.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        var post = postRepository.findById(postId);
-        if (post.isEmpty()) {
+        var postOptional = postRepository.findById(postId);
+        if (postOptional.isEmpty()) {
             throw new NotFoundException("Post not found");
         }
-        var comment = new Comment(content, user.get(), post.get());
+        var post = postOptional.get();
+        var comment = new Comment(content, user.get(), post);
         commentRepository.save(comment);
+        post.setLatestCommentAt(Instant.now());
+        postRepository.save(post);
         return new CommentDto(comment.getId(), comment.getContent(),
                 new UserDto(comment.getAuthor().getId(), comment.getAuthor().getUsername()), comment.getCreatedAt());
     }

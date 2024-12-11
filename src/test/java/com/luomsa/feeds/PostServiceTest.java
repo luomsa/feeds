@@ -60,11 +60,11 @@ public class PostServiceTest {
         var user = new User("user", "password");
         var post = new Post("title", "title", "content", user);
         var postPage = new PageImpl<>(List.of(post));
-        when(postRepository.findAllByOrderByCreatedAt(any(PageRequest.class))).thenReturn(postPage);
+        when(postRepository.findAllByOrderByLatestCommentAtDesc(any(PageRequest.class))).thenReturn(postPage);
 
         var pagePostDto = postService.getLatestPosts(0);
 
-        verify(postRepository).findAllByOrderByCreatedAt(any(PageRequest.class));
+        verify(postRepository).findAllByOrderByLatestCommentAtDesc(any(PageRequest.class));
 
         assertEquals(1, pagePostDto.posts().size());
         assertEquals("title", pagePostDto.posts().get(0).title());
