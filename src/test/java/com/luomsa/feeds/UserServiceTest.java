@@ -1,6 +1,5 @@
 package com.luomsa.feeds;
 
-import com.luomsa.feeds.dto.UserDto;
 import com.luomsa.feeds.entity.User;
 import com.luomsa.feeds.repository.UserRepository;
 import com.luomsa.feeds.service.UserService;
